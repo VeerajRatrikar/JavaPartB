@@ -1,0 +1,30 @@
+<%@ page language="java" contentType="text/html; charset=ISO-8859-1"
+    pageEncoding="ISO-8859-1"%>
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="ISO-8859-1">
+<title>Insert title here</title>
+</head>
+<body>
+<h1>Sample order form</h1>
+<form method="post" action="./pmg8.html">
+<div>
+<label for="productName">Product Name</label>
+<input type="text" id="productname" name="productName" required>
+</div>
+<br>
+<label for="quantity">Quantity</label>
+<input type="number" id="quantity" name="quantity" required>
+<br>
+<label for"customername">Your Name</label>
+<input type="text" id="customerName" name="customerName" required>
+<br>
+<label for="email">Your email:</label>
+<input type="email" id="email" name="email" placeholder="anu@gmail.com" required>
+<br>
+<input type="submit" value="Submit Order">
+</form>
+
+</body>
+</html>
