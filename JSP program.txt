@@ -1,0 +1,27 @@
+//Write a JSP program which shows a Sample Order Form
+//JSP: Java Server Page
+1.Apache Tomcat(JDK should be there in the system)
+2.Java EE Developer
+-->Java Server Page
+output will be redirected to the webpage.
+-->To install tomcat we need JDK
+-->All programs were executes in java basic
+-->Help -> Install new software ->Available Software window-> dropdown-->https://download.eclipse.org/releases/2023-09/202309131000->go to last one i.e. Web,XML,Java ... -> next -> accept the license and finish -> right bottom wait until 100% completion->restart->check for Java EE in perspective 
+-->Go to Java EE 
+-->Go to google and search Apache tomcat->Downloads->Tomcat 10->Binary Distributions ->32-bit/64-bit Windows Service Installer ( pgp, sha512)
+-->Double click on the extension ->Choose components
+-->username : admin password: admin -> next ->Install -> Finish
+-->Start the server --> Select servers in console then -> create new-> Apache -> last i.e. Tomcat v10.1 Server 
+
+--> Services-->Apache Tomcat 10.1 ->Right click and select START ->status should be running if not then JDK is not installed
+
+
+
+//Run as -> then --> server -->double click on server and change port number to 8081 and 8082
+
+
+
+//In Eclipse
+File-> NEW-> Dynamic Web Project
+Stream down to web app-->Right click new -> new html file
+New --> JSP file
