@@ -1,0 +1,23 @@
+//Poisonous plant
+
+int poisonousPlants(int p_count, int* p) {
+    int days = 0;
+    int* stack = malloc(p_count * sizeof(int));
+    int top = -1;
+
+    for (int i = 0; i < p_count; i++) {
+        int count = 0;
+        while (top >= 0 && p[i] <= p[stack[top]]) {
+            top--;
+            count++;
+        }
+        if (top >= 0) {
+            count = count > 0 ? count + 1 : 1;
+        }
+        days = days > count ? days : count;
+        stack[++top] = i;
+    }
+
+    free(stack);
+    return days;
+}
