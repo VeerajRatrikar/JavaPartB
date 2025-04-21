@@ -1,23 +1,145 @@
 //Poisonous plant
 
+#include <assert.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <ctype.h>  // Include for isspace function
+
+// Define true if not already defined
+#ifndef true
+#define true 1
+#endif
+
+// Define false if not already defined
+#ifndef false
+#define false 0
+#endif
+
+char* readline();
+char* ltrim(char*);
+char* rtrim(char*);
+char** split_string(char*);
+int parse_int(char*);
+
 int poisonousPlants(int p_count, int* p) {
-    int days = 0;
-    int* stack = malloc(p_count * sizeof(int));
-    int top = -1;
+    int* days = (int*)calloc(p_count, sizeof(int));  // Array to store days for each plant
+    int* stack = (int*)malloc(p_count * sizeof(int)); // Stack to store plant indices
+    int top = -1;  // Stack top index
+    int max_days = 0;  // Maximum days for a plant to die
 
     for (int i = 0; i < p_count; i++) {
-        int count = 0;
+        int max_day = 0;
+
+        // Process stack to remove plants that won't survive
         while (top >= 0 && p[i] <= p[stack[top]]) {
-            top--;
-            count++;
+            max_day = (max_day > days[stack[top]]) ? max_day : days[stack[top]];
+            top--;  // Pop plants from stack that can't survive
         }
-        if (top >= 0) {
-            count = count > 0 ? count + 1 : 1;
+
+        // If stack is empty, this plant doesn't get poisoned
+        if (top == -1) {
+            days[i] = 0;  // No poisoning day
+        } else {
+            days[i] = max_day + 1;  // Poisoning day based on previous plant's decay time
+            max_days = (max_days > days[i]) ? max_days : days[i];  // Update max_days
         }
-        days = days > count ? days : count;
-        stack[++top] = i;
+
+        stack[++top] = i;  // Push this plant's index onto the stack
     }
 
     free(stack);
-    return days;
+    free(days);
+    return max_days;  // Return the maximum number of days for a plant to die
 }
+
+int main() {
+    FILE* fptr = fopen(getenv("OUTPUT_PATH"), "w");
+
+    int n = parse_int(ltrim(rtrim(readline())));  // Read the number of plants
+    char** p_temp = split_string(rtrim(readline()));  // Read the plant pesticide levels
+
+    int* p = malloc(n * sizeof(int));
+
+    for (int i = 0; i < n; i++) {
+        int p_item = parse_int(*(p_temp + i));  // Convert string to integer
+        *(p + i) = p_item;  // Store the pesticide level
+    }
+
+    int result = poisonousPlants(n, p);  // Call the poisonousPlants function
+
+    fprintf(fptr, "%d\n", result);  // Write the result to the output
+
+    fclose(fptr);  // Close the file
+
+    free(p);  // Free allocated memory for plants array
+    return 0;
+}
+
+char* readline() {
+    size_t alloc_length = 1024;
+    size_t data_length = 0;
+    char* data = malloc(alloc_length);
+
+    while (true) {
+        char* cursor = data + data_length;
+        char* line = fgets(cursor, alloc_length - data_length, stdin);
+
+        if (!line) break;
+
+        data_length += strlen(cursor);
+        if (data_length < alloc_length - 1 || data[data_length - 1] == '\n') break;
+
+        alloc_length <<= 1;
+        data = realloc(data, alloc_length);
+        if (!data) break;
+    }
+
+    if (data[data_length - 1] == '\n') {
+        data[data_length - 1] = '\0';
+        data = realloc(data, data_length);
+    } else {
+        data = realloc(data, data_length + 1);
+        data[data_length] = '\0';
+    }
+
+    return data;
+}
+
+char* ltrim(char* str) {
+    if (!str) return '\0';
+    while (*str != '\0' && isspace(*str)) str++;
+    return str;
+}
+
+char* rtrim(char* str) {
+    if (!str) return '\0';
+    char* end = str + strlen(str) - 1;
+    while (end >= str && isspace(*end)) end--;
+    *(end + 1) = '\0';
+    return str;
+}
+
+char** split_string(char* str) {
+    char** splits = NULL;
+    char* token = strtok(str, " ");
+    int spaces = 0;
+
+    while (token) {
+        splits = realloc(splits, sizeof(char*) * ++spaces);
+        splits[spaces - 1] = token;
+        token = strtok(NULL, " ");
+    }
+
+    return splits;
+}
+
+int parse_int(char* str) {
+    char* endptr;
+    int value = strtol(str, &endptr, 10);
+    if (endptr == str || *endptr != '\0') {
+        exit(EXIT_FAILURE);
+    }
+    return value;
+}
+
