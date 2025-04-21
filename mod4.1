@@ -1,0 +1,25 @@
+//Trucktour
+
+
+int truckTour(int petrolpumps_rows, int petrolpumps_columns, int** petrolpumps) {
+    int total_petrol = 0;  // Total petrol accumulated during the tour
+    int current_petrol = 0; // Petrol accumulated while trying to complete the tour from a start point
+    int start_index = 0;    // The current index from where we are trying to start the tour
+    
+    for (int i = 0; i < petrolpumps_rows; i++) {
+        int petrol_at_pump = petrolpumps[i][0];  // Petrol available at the current pump
+        int distance_to_next = petrolpumps[i][1]; // Distance to the next pump
+        
+        total_petrol += petrol_at_pump - distance_to_next; // Add net petrol (petrol - distance) at pump i
+        current_petrol += petrol_at_pump - distance_to_next;
+        
+        // If at any point, current_petrol is negative, we can't continue from this start index
+        if (current_petrol < 0) {
+            start_index = i + 1;  // Try the next pump as the new starting point
+            current_petrol = 0;   // Reset current petrol for the new start
+        }
+    }
+    
+    // If total_petrol is non-negative, we can complete the circle, return the start index
+    return (total_petrol >= 0) ? start_index : -1;
+}
