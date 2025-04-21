@@ -1,0 +1,84 @@
+//element at the middle of the stack
+
+
+#include <stdio.h>
+#include <stdlib.h>
+
+typedef struct {
+    int* data;
+    int size;
+    int capacity;
+} Stack;
+
+// Function to initialize a stack
+void init_stack(Stack* stack, int capacity) {
+    stack->data = (int*)malloc(capacity * sizeof(int));
+    stack->size = 0;
+    stack->capacity = capacity;
+}
+
+// Function to push an element onto the stack
+void push(Stack* stack, int value) {
+    stack->data[stack->size++] = value;
+}
+
+// Function to pop an element from the stack
+int pop(Stack* stack) {
+    return stack->data[--stack->size];
+}
+
+// Function to get the top element of the stack without removing it
+int peek(Stack* stack) {
+    return stack->data[stack->size - 1];
+}
+
+// Function to check if the stack is empty
+int is_empty(Stack* stack) {
+    return stack->size == 0;
+}
+
+int main() {
+    int q;
+    scanf("%d", &q);  // Read number of queries
+    
+    Stack stack_in, stack_out;
+    init_stack(&stack_in, q);  // Initialize the input stack
+    init_stack(&stack_out, q); // Initialize the output stack
+
+    while (q--) {
+        int query_type;
+        scanf("%d", &query_type);  // Read the query type
+        
+        if (query_type == 1) {
+            int x;
+            scanf("%d", &x);  // Read the element to enqueue
+            push(&stack_in, x);  // Enqueue to stack_in
+        }
+        else if (query_type == 2) {
+            // Dequeue operation
+            if (is_empty(&stack_out)) {
+                // If stack_out is empty, transfer elements from stack_in to stack_out
+                while (!is_empty(&stack_in)) {
+                    push(&stack_out, pop(&stack_in));
+                }
+            }
+            pop(&stack_out);  // Remove the front element
+        }
+        else if (query_type == 3) {
+            // Print front element
+            if (is_empty(&stack_out)) {
+                // If stack_out is empty, transfer elements from stack_in to stack_out
+                while (!is_empty(&stack_in)) {
+                    push(&stack_out, pop(&stack_in));
+                }
+            }
+            printf("%d\n", peek(&stack_out));  // Print the front element
+        }
+    }
+    
+    // Free allocated memory for stacks
+    free(stack_in.data);
+    free(stack_out.data);
+
+    return 0;
+}
